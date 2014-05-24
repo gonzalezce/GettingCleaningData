@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title>GettingCleaningData</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+
+
+
+
+</head>
+
+<body>
+<h1>GettingCleaningData</h1>
+
+<p>Course project for Coursera. The run_analysis.R script assumes the user has downloaded and unzipped the data in their working directory. First the data is imported into R using read.table(). </p>
+
+<pre><code>setwd(&quot;./UCI HAR Dataset/&quot;)
+testSub&lt;- read.table(&quot;test/subject_test.txt&quot;)
+testX&lt;- read.table(&quot;test/X_test.txt&quot;)
+testY&lt;- read.table(&quot;test/Y_test.txt&quot;)
+trainSub&lt;- read.table(&quot;train/subject_train.txt&quot;)
+trainX&lt;- read.table(&quot;train/X_train.txt&quot;)
+trainY&lt;- read.table(&quot;train/Y_train.txt&quot;)
+features&lt;- read.table(&quot;features.txt&quot;)
+activityL&lt;- read.table(&quot;activity_labels.txt&quot;)
+</code></pre>
+
+<p>The test and training data are stacked on top of each other and the column names are added on from the features.txt. This combined data.frame is subsetted for only columns that contain mean or standard deviation statistics. Subject and activity columns are column-binded to this subsetted data.frame. </p>
+
+<pre><code>both&lt;- rbind(trainX, testX)
+colnames(both)&lt;- features[,2]
+bothMS&lt;- both[,grep(&quot;mean|std&quot;, colnames(both))]
+subT&lt;- rbind(trainSub, testSub)
+actT&lt;- rbind(trainY, testY)
+GROUP&lt;- factor(c(rep(&quot;TRAIN&quot;, 7352), rep(&quot;TEST&quot;,2947)))
+bothMSF&lt;- cbind(subT, GROUP, actT, bothMS)
+colnames(bothMSF)[1:3]&lt;- c(&quot;subT&quot;,&quot;GROUP&quot;,&quot;actT&quot;)
+</code></pre>
+
+<p>The numeric activity variable is re-coded using the activity_labels.txt. </p>
+
+<pre><code>bothMSF$actT&lt;- factor(bothMSF$actT)
+levels(bothMSF$actT)&lt;- c(&quot;WALKING&quot;,&quot;WALKING_UPSTAIRS&quot;,&quot;WALKING_DOWNSTAIRS&quot;,&quot;SITTING&quot;,&quot;STANDING&quot;,&quot;LAYING&quot;)
+bothMSF$subT&lt;- factor(bothMSF$subT)
+</code></pre>
+
+<p>The first dataset is now complete and is contained in the variable bothMSF. Next, I generated a new tidy data set in which each row is a unique subject-activity category and the columns are averages of the mean and standard deviation statistics in bothMSF. To do this, I created an empty data frame, subsetted bothMSF by unique subject-activity, and filled in the empty data frame (tidy) with the averges of the colums in bothMSF.  I included any statistic that had &ldquo;mean&rdquo; or &ldquo;std&rdquo; in the title. </p>
+
+<pre><code>tidy&lt;- data.frame(matrix(data=NA, nrow=180, ncol=79))
+newRow&lt;- paste(bothMSF$subT, &quot;_&quot;,bothMSF$actT,sep=&quot;&quot;)
+bothMSF$subAct&lt;- newRow
+
+for(i in 1:length(unique(newRow))){
+  subset&lt;- bothMSF[bothMSF$subAct==unique(newRow)[i],]
+  tidy[i,1:79]&lt;- as.numeric(apply(subset[,4:82], 2, mean))
+}
+tidyF&lt;- cbind(unique(newRow), tidy)
+colnames(tidyF)[2:80]&lt;- colnames(bothMSF)[4:82]
+</code></pre>
+
+<p>Finally, I cleaned up the variables of the tidy data frame so they were more human readable. Although the lectures suggest using only lower case, I changed the variables to camel case for readability. The last line writes out the tidy data set as a .txt file. </p>
+
+<pre><code>cNames&lt;- colnames(tidyF)
+cNames1&lt;- gsub(&quot;-mean()-X&quot;, &quot;MeanX&quot;, cNames, fixed=T)
+cNames2&lt;- gsub(&quot;-mean()-Y&quot;, &quot;MeanY&quot;, cNames1, fixed=T)
+cNames3&lt;- gsub(&quot;-mean()-Z&quot;, &quot;MeanZ&quot;, cNames2, fixed=T)
+cNames4&lt;- gsub(&quot;-std()-X&quot;, &quot;StdX&quot;, cNames3, fixed=T)
+cNames5&lt;- gsub(&quot;-std()-Y&quot;, &quot;StdY&quot;, cNames4, fixed=T)
+cNames6&lt;- gsub(&quot;-std()-Z&quot;, &quot;StdZ&quot;, cNames5, fixed=T)
+cNames7&lt;- gsub(&quot;Acc&quot;,&quot;Accelerometer&quot;,cNames6)
+cNames8&lt;- gsub(&quot;-mean()&quot;,&quot;Mean&quot;,cNames7, fixed=T)
+cNames9&lt;- gsub(&quot;-std()&quot;,&quot;Std&quot;,cNames8, fixed=T)
+cNames10&lt;- gsub(&quot;-meanFreq()-X&quot;, &quot;MeanfreqX&quot;, cNames9, fixed=T)
+cNames11&lt;- gsub(&quot;-meanFreq()-Y&quot;, &quot;MeanfreqY&quot;, cNames10, fixed=T)
+cNames12&lt;- gsub(&quot;-meanFreq()-Z&quot;, &quot;MeanfreqZ&quot;, cNames11, fixed=T)
+cNames13&lt;- gsub(&quot;-meanFreq()&quot;, &quot;Meanfreq&quot;, cNames12, fixed=T)
+cNames14&lt;- gsub(&quot;Gyro&quot;,&quot;Gyroscope&quot;, cNames13)
+cNames14[1]&lt;- &quot;subjectActivity&quot;
+colnames(tidyF)&lt;- cNames14
+write.table(tidyF, &quot;~/Desktop/tidydata.txt&quot;, row.names=F)
+</code></pre>
+
+</body>
+
+</html>
+
