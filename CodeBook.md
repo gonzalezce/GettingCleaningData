@@ -1,0 +1,88 @@
+CodeBook
+========================================================
+This codebook explains the structure of the finalized data set tidydata.txt. See README.md for information on how the data was transformed from the raw data, which you can download here: https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip 
+
+For more information on the variables below, see features_info.txt. Briefly, "subjectActivity" is a unique subject-activity category (180 rows given 30 subjects and 6 activities each). An initial "t" or "f" represents time or frequency series signal, collected at 50 Hz. "Body" and "Gravity" denote different components of the acceleromter or gyroscope signals. Mean and Std (standard deviation) are the two summary statistics for each signal. X, Y, and Z represent 3D coordinate directions. Variables with "jerk" represent jerk signals. "Meanfreq" represents weighted mean frequency calculations and "Mag" the magnitude of the euclidean norm of the signal. 
+
+
+*Variables*
+- subjectActivity
+- tBodyAccelerometerMeanX
+- tBodyAccelerometerMeanY
+- tBodyAccelerometerMeanZ
+- tBodyAccelerometerStdX
+- tBodyAccelerometerStdY
+- tBodyAccelerometerStdZ
+- tGravityAccelerometerMeanX
+- tGravityAccelerometerMeanY
+- tGravityAccelerometerMeanZ
+- tGravityAccelerometerStdX
+- tGravityAccelerometerStdY
+- tGravityAccelerometerStdZ
+- tBodyAccelerometerJerkMeanX
+- tBodyAccelerometerJerkMeanY
+- tBodyAccelerometerJerkMeanZ
+- tBodyAccelerometerJerkStdX
+- tBodyAccelerometerJerkStdY
+- tBodyAccelerometerJerkStdZ
+- tBodyGyroscopeMeanX
+- tBodyGyroscopeMeanY
+- tBodyGyroscopeMeanZ
+- tBodyGyroscopeStdX
+- tBodyGyroscopeStdY
+- tBodyGyroscopeStdZ
+- tBodyGyroscopeJerkMeanX
+- tBodyGyroscopeJerkMeanY
+- tBodyGyroscopeJerkMeanZ
+- tBodyGyroscopeJerkStdX
+- tBodyGyroscopeJerkStdY
+- tBodyGyroscopeJerkStdZ
+- tBodyAccelerometerMagMean
+- tBodyAccelerometerMagStd
+- tGravityAccelerometerMagMean
+- tGravityAccelerometerMagStd
+- tBodyAccelerometerJerkMagMean
+- tBodyAccelerometerJerkMagStd
+- tBodyGyroscopeMagMean
+- tBodyGyroscopeMagStd
+- tBodyGyroscopeJerkMagMean
+- tBodyGyroscopeJerkMagStd
+- fBodyAccelerometerMeanX
+- fBodyAccelerometerMeanY
+- fBodyAccelerometerMeanZ
+- fBodyAccelerometerStdX
+- fBodyAccelerometerStdY
+- fBodyAccelerometerStdZ
+- fBodyAccelerometerMeanfreqX
+- fBodyAccelerometerMeanfreqY
+- fBodyAccelerometerMeanfreqZ
+- fBodyAccelerometerJerkMeanX
+- fBodyAccelerometerJerkMeanY
+- fBodyAccelerometerJerkMeanZ
+- fBodyAccelerometerJerkStdX
+- fBodyAccelerometerJerkStdY
+- fBodyAccelerometerJerkStdZ
+- fBodyAccelerometerJerkMeanfreqX
+- fBodyAccelerometerJerkMeanfreqY
+- fBodyAccelerometerJerkMeanfreqZ
+- fBodyGyroscopeMeanX
+- fBodyGyroscopeMeanY
+- fBodyGyroscopeMeanZ
+- fBodyGyroscopeStdX
+- fBodyGyroscopeStdY
+- fBodyGyroscopeStdZ
+- fBodyGyroscopeMeanfreqX
+- fBodyGyroscopeMeanfreqY
+- fBodyGyroscopeMeanfreqZ
+- fBodyAccelerometerMagMean
+- fBodyAccelerometerMagStd
+- fBodyAccelerometerMagMeanfreq
+- fBodyBodyAccelerometerJerkMagMean
+- fBodyBodyAccelerometerJerkMagStd
+- fBodyBodyAccelerometerJerkMagMeanfreq
+- fBodyBodyGyroscopeMagMean
+- fBodyBodyGyroscopeMagStd
+- fBodyBodyGyroscopeMagMeanfreq
+- fBodyBodyGyroscopeJerkMagMean
+- fBodyBodyGyroscopeJerkMagStd
+- fBodyBodyGyroscopeJerkMagMeanfreq
